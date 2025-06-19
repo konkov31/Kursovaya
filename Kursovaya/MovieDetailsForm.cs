@@ -6,10 +6,9 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
 using System.Windows.Forms;
+using Kursovaya.EF;
 
 namespace Kursovaya
 {
@@ -25,55 +24,26 @@ namespace Kursovaya
 
         private void LoadMovieDetails()
         {
-            string connectionString = "Data Source=LAPTOP-9NU3LM22\\SQLEXPRESS;Initial Catalog=movie_agregator;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
-            string query = @"SELECT title, description, release_year, duration, imdb_rating, poster_url
-                            FROM Films 
-                            WHERE movie_id = @MovieId";
 
-            string genresQuery = @"SELECT g.name 
-                     FROM GENRES g
-                     INNER JOIN MOVIE_GENRES mg ON g.genre_id = mg.genre_id
-                     WHERE mg.movie_id = @MovieId";
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using(var context = new MovieAgragatorContext())
                 {
-                    connection.Open();
-                    SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@MovieId", _movieId);
-
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    var moviesFound = context.FILMS.Where(m => m.movie_id == _movieId);
+                    if(moviesFound.Count() == 0)
                     {
-                        if (reader.Read())
-                        {
-                            lblMovieId.Text = "Номер:" + _movieId.ToString();
-                            lblTitle.Text = reader["Title"].ToString();
-                            txtDescription.Text = reader["Description"].ToString();
-                            lblYear.Text = "Год выпуска" + reader["Release_Year"].ToString();
-                            lblDuration.Text = "Длительность: " + reader["Duration"].ToString() + " мин";
-                            lblRating.Text = "Рейтинг: " + reader["imdb_rating"].ToString() + "/10";
-
-                            if (reader["poster_url"] != DBNull.Value)
-                            {
-                                string imageUrl = reader["poster_url"].ToString();
-                                LoadPosterImage(imageUrl);
-                            }
-                        }
+                        throw new Exception("Фильм не существет");
                     }
-
-                    SqlCommand genresCommand = new SqlCommand(genresQuery, connection);
-                    genresCommand.Parameters.AddWithValue("@MovieId", _movieId);
-
-                    List<string> genres = new List<string>();
-                    using (SqlDataReader reader = genresCommand.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            genres.Add(reader["name"].ToString());
-                        }
-                    }
-
+                    var movie = moviesFound.First();
+                    lblMovieId.Text = "Номер:" + _movieId.ToString();
+                    lblTitle.Text = movie.title;
+                    txtDescription.Text = movie.description.ToString();
+                    lblYear.Text = "Год выпуска" + movie.release_year.ToString();
+                    lblDuration.Text = "Длительность: " + movie.duration.ToString() + " мин";
+                    lblRating.Text = "Рейтинг: " + movie.imdb_rating.ToString() + "/10";
+                    
+                    var genres = context.FILMS_GANRES.Where(m => m.movie_id == _movieId).Select(m => m.name).ToList();
                     if (genres.Count > 0)
                     {
                         lblGenres.Text = "Жанры: " + string.Join(", ", genres);
@@ -82,7 +52,17 @@ namespace Kursovaya
                     {
                         lblGenres.Text = "Жанры не указаны";
                     }
+
+                    if (movie.poster_url != null)
+                    {
+                        string imageUrl = movie.poster_url;
+                        Image img = DownloadImageSync(imageUrl);
+                        ptrboxPoster.Image = img;
+                        ptrboxPoster.SizeMode = PictureBoxSizeMode.StretchImage;
+                    }
+
                 }
+
             }
             catch (Exception ex)
             {
@@ -90,37 +70,15 @@ namespace Kursovaya
             }
         }
 
-
-        private async void LoadPosterImage(string imageUrl)
+        public Image DownloadImageSync(string imageUrl)
         {
-           
-            try
+            using (WebClient client = new WebClient())
             {
-                using (HttpClient client = new HttpClient())
+                byte[] data = client.DownloadData(imageUrl);
+                using (MemoryStream mem = new MemoryStream(data))
                 {
-                    // Добавляем User-Agent, так как некоторые серверы требуют его
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0");
-
-                    using (var response = await client.GetAsync(imageUrl))
-                    {
-                        response.EnsureSuccessStatusCode(); // Вызовет исключение для неудачных статусов
-
-                        using (Stream stream = await response.Content.ReadAsStreamAsync())
-                        {
-                            // Создаем копию потока для безопасной работы
-                            using (MemoryStream ms = new MemoryStream())
-                            {
-                                await stream.CopyToAsync(ms);
-                                ms.Position = 0;
-                                ptrboxPoster.Image = Image.FromStream(ms);
-                            }
-                        }
-                    }
+                    return Image.FromStream(mem);
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка загрузки постера: {ex.Message}");
             }
         }
 

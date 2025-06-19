@@ -48,14 +48,15 @@
             // 
             this.lblTest.Location = new System.Drawing.Point(0, 0);
             this.lblTest.Name = "lblTest";
-            this.lblTest.Size = new System.Drawing.Size(100, 23);
+            this.lblTest.Size = new System.Drawing.Size(89, 18);
             this.lblTest.TabIndex = 0;
             // 
             // btn_topfilms
             // 
-            this.btn_topfilms.Location = new System.Drawing.Point(12, 99);
+            this.btn_topfilms.Location = new System.Drawing.Point(11, 79);
+            this.btn_topfilms.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btn_topfilms.Name = "btn_topfilms";
-            this.btn_topfilms.Size = new System.Drawing.Size(177, 82);
+            this.btn_topfilms.Size = new System.Drawing.Size(157, 66);
             this.btn_topfilms.TabIndex = 1;
             this.btn_topfilms.Text = "Топ лучших фильмов";
             this.btn_topfilms.UseVisualStyleBackColor = true;
@@ -64,26 +65,28 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(16, 73);
+            this.label2.Location = new System.Drawing.Point(14, 58);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(134, 20);
+            this.label2.Size = new System.Drawing.Size(116, 16);
             this.label2.TabIndex = 3;
             this.label2.Text = "Рекомендуемое:";
             // 
             // btnfavgenfilms
             // 
-            this.btnfavgenfilms.Location = new System.Drawing.Point(13, 187);
+            this.btnfavgenfilms.Location = new System.Drawing.Point(12, 150);
+            this.btnfavgenfilms.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnfavgenfilms.Name = "btnfavgenfilms";
-            this.btnfavgenfilms.Size = new System.Drawing.Size(176, 69);
+            this.btnfavgenfilms.Size = new System.Drawing.Size(156, 55);
             this.btnfavgenfilms.TabIndex = 4;
             this.btnfavgenfilms.Text = "Фильмы ваших любимых жанров";
             this.btnfavgenfilms.UseVisualStyleBackColor = true;
             // 
             // btnGoToMovie
             // 
-            this.btnGoToMovie.Location = new System.Drawing.Point(297, 99);
+            this.btnGoToMovie.Location = new System.Drawing.Point(264, 79);
+            this.btnGoToMovie.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnGoToMovie.Name = "btnGoToMovie";
-            this.btnGoToMovie.Size = new System.Drawing.Size(149, 82);
+            this.btnGoToMovie.Size = new System.Drawing.Size(132, 66);
             this.btnGoToMovie.TabIndex = 5;
             this.btnGoToMovie.Text = "Посмотреть фильмы";
             this.btnGoToMovie.UseVisualStyleBackColor = true;
@@ -91,16 +94,18 @@
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(535, 99);
+            this.txtSearch.Location = new System.Drawing.Point(476, 79);
+            this.txtSearch.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(163, 26);
+            this.txtSearch.Size = new System.Drawing.Size(145, 22);
             this.txtSearch.TabIndex = 6;
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(704, 92);
+            this.btnSearch.Location = new System.Drawing.Point(626, 74);
+            this.btnSearch.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(75, 33);
+            this.btnSearch.Size = new System.Drawing.Size(67, 26);
             this.btnSearch.TabIndex = 7;
             this.btnSearch.Text = "Найти";
             this.btnSearch.UseVisualStyleBackColor = true;
@@ -109,18 +114,21 @@
             // dataGridViewResults
             // 
             this.dataGridViewResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewResults.Location = new System.Drawing.Point(535, 131);
+            this.dataGridViewResults.Location = new System.Drawing.Point(476, 105);
+            this.dataGridViewResults.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dataGridViewResults.Name = "dataGridViewResults";
             this.dataGridViewResults.RowHeadersWidth = 62;
             this.dataGridViewResults.RowTemplate.Height = 28;
-            this.dataGridViewResults.Size = new System.Drawing.Size(240, 203);
+            this.dataGridViewResults.Size = new System.Drawing.Size(213, 162);
             this.dataGridViewResults.TabIndex = 8;
+            this.dataGridViewResults.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridViewResults_DataError);
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(535, 50);
+            this.btnLogin.Location = new System.Drawing.Point(476, 40);
+            this.btnLogin.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(240, 43);
+            this.btnLogin.Size = new System.Drawing.Size(213, 34);
             this.btnLogin.TabIndex = 9;
             this.btnLogin.Text = "Войти в другой аккаунт";
             this.btnLogin.UseVisualStyleBackColor = true;
@@ -128,9 +136,10 @@
             // 
             // btnActorsList
             // 
-            this.btnActorsList.Location = new System.Drawing.Point(297, 187);
+            this.btnActorsList.Location = new System.Drawing.Point(264, 150);
+            this.btnActorsList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnActorsList.Name = "btnActorsList";
-            this.btnActorsList.Size = new System.Drawing.Size(149, 69);
+            this.btnActorsList.Size = new System.Drawing.Size(132, 55);
             this.btnActorsList.TabIndex = 10;
             this.btnActorsList.Text = "Все актеры";
             this.btnActorsList.UseVisualStyleBackColor = true;
@@ -138,18 +147,20 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(297, 263);
+            this.button2.Location = new System.Drawing.Point(264, 210);
+            this.button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(149, 71);
+            this.button2.Size = new System.Drawing.Size(132, 57);
             this.button2.TabIndex = 11;
             this.button2.Text = "Все режиссеры";
             this.button2.UseVisualStyleBackColor = true;
             // 
             // btnSelectGenres
             // 
-            this.btnSelectGenres.Location = new System.Drawing.Point(297, 340);
+            this.btnSelectGenres.Location = new System.Drawing.Point(264, 272);
+            this.btnSelectGenres.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSelectGenres.Name = "btnSelectGenres";
-            this.btnSelectGenres.Size = new System.Drawing.Size(149, 68);
+            this.btnSelectGenres.Size = new System.Drawing.Size(132, 54);
             this.btnSelectGenres.TabIndex = 12;
             this.btnSelectGenres.Text = "Все жанры";
             this.btnSelectGenres.UseVisualStyleBackColor = true;
@@ -157,18 +168,19 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(535, 352);
+            this.button4.Location = new System.Drawing.Point(476, 282);
+            this.button4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(240, 44);
+            this.button4.Size = new System.Drawing.Size(213, 35);
             this.button4.TabIndex = 13;
             this.button4.Text = "Редактировать";
             this.button4.UseVisualStyleBackColor = true;
             // 
             // Mainform
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(797, 449);
+            this.ClientSize = new System.Drawing.Size(708, 359);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.btnSelectGenres);
             this.Controls.Add(this.button2);
@@ -182,6 +194,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btn_topfilms);
             this.Controls.Add(this.lblTest);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Mainform";
             this.Text = "Mainform";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewResults)).EndInit();

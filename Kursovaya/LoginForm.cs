@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Windows.Forms;
+using Kursovaya.EF;
 
 
 namespace Kursovaya
@@ -54,42 +57,25 @@ namespace Kursovaya
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+              
+                using (var context = new MovieAgragatorContext())
                 {
-                    connection.Open();
-
-                    string query = @"SELECT user_id, username, is_premium 
-                                    FROM USERS 
-                                    WHERE username = @Username AND user_password = @Password";
-
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@Username", username);
-                        command.Parameters.AddWithValue("@Password", password);
-
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            if (reader.HasRows)
-                            {
-                                reader.Read();
-                                int userId = reader.GetInt32(0);
-                                string dbUsername = reader.GetString(1);
-                                bool isPremium = reader.GetBoolean(2);
-
-                                this.Hide(); 
-
-                                Mainform mainForm = new Mainform(userId, dbUsername, isPremium);
-                                mainForm.Show();
-                            }
-                            else
-                            {
-                                MessageBox.Show("Неверный логин или пароль", "Ошибка входа",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                txtPassword.SelectAll();
-                                txtPassword.Focus();
-                            }
-                        }
+                var userFound = context.USERS.Where(u => u.username == username && u.user_password == password).ToList();
+                if(userFound.Count() == 0)
+                {
+                    MessageBox.Show("Неверный логин или пароль", "Ошибка входа", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        txtPassword.SelectAll();
+                        txtPassword.Focus();
                     }
+
+                    var User = userFound.First();
+
+                    int userId = User.user_id;
+                    string dbUsername = User.username;
+                    bool isPremium = Convert.ToBoolean(User.is_premium);
+                    this.Hide(); 
+                    Mainform mainForm = new Mainform(userId, dbUsername, isPremium);
+                    mainForm.Show();
                 }
             }
             catch (SqlException sqlEx)
@@ -149,57 +135,33 @@ namespace Kursovaya
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using(var context = new MovieAgragatorContext())
                 {
-                    connection.Open();
+                    var usernameField = new SqlParameter("@Username", username);
+                    var emailField = new SqlParameter("@Email", email);
+                    var passwordField = new SqlParameter("@Password", password);
 
-                    // Проверка на существующего пользователя
-                    string checkUserQuery = "SELECT COUNT(*) FROM USERS WHERE username = @Username OR email = @Email";
-                    using (SqlCommand checkCmd = new SqlCommand(checkUserQuery, connection))
-                    {
-                        checkCmd.Parameters.AddWithValue("@Username", username);
-                        checkCmd.Parameters.AddWithValue("@Email", email);
-
-                        int userCount = (int)checkCmd.ExecuteScalar();
-                        if (userCount > 0)
-                        {
-                            MessageBox.Show("Пользователь с таким именем или email уже существует", "Ошибка",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-                    }
-
-                    // Регистрация нового пользователя
-                    string insertQuery = @"INSERT INTO USERS (username, email, user_password, registration_date, is_premium)
-                                 VALUES (@Username, @Email, @Password, @RegDate, 0)";
-
-                    using (SqlCommand insertCmd = new SqlCommand(insertQuery, connection))
-                    {
-                        insertCmd.Parameters.AddWithValue("@Username", username);
-                        insertCmd.Parameters.AddWithValue("@Email", email);
-                        insertCmd.Parameters.AddWithValue("@Password", password);
-                        insertCmd.Parameters.AddWithValue("@RegDate", DateTime.Now);
-
-                        int rowsAffected = insertCmd.ExecuteNonQuery();
-
-                        if (rowsAffected > 0)
-                        {
-                            MessageBox.Show("Регистрация прошла успешно!", "Успех",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                            // Очищаем поля после успешной регистрации
-                            txtRegUsername.Text = "";
-                            txtRegEmail.Text = "";
-                            txtRegPassword.Text = "";
-                            txtRegConfirmPassword.Text = "";
-                        }
-                    }
+                    context.Database.ExecuteSqlCommand("exec RegisterUser @Username, @Email, @Password", usernameField, emailField, passwordField);
                 }
+
+                txtRegUsername.Text = "";
+                txtRegEmail.Text = "";
+                txtRegPassword.Text = "";
+                txtRegConfirmPassword.Text = "";
+
+                MessageBox.Show("Регистрация прошла успешно!", "Успех",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (SqlException sqlEx)
             {
-                MessageBox.Show($"Ошибка базы данных: {sqlEx.Message}", "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
+                switch (sqlEx.Number)
+                {
+                    case 50000:
+                        MessageBox.Show($"Пользователь с таким логином уже есть", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        break;
+                }
+               
             }
             catch (Exception ex)
             {

@@ -10,6 +10,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Kursovaya.EF;
 
 namespace Kursovaya
 {
@@ -65,51 +66,33 @@ namespace Kursovaya
                 return;
             }
 
-            string connectionString = "Data Source=LAPTOP-9NU3LM22\\SQLEXPRESS;Initial Catalog=movie_agregator;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
-
-            // Улучшенный запрос с сортировкой по рейтингу
-            string query = @"SELECT movie_id, title, release_year AS [Год выпуска], imdb_rating AS [Рейтинг]
-                    FROM FILMS
-                    WHERE title COLLATE SQL_Latin1_General_CP1_CI_AI LIKE @SearchQuery
-                    ORDER BY imdb_rating DESC";
-
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+
+                using(var context = new MovieAgragatorContext())
                 {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    var films = context.FILMS.Where(f => f.title == searchQuery).ToList();
+                    if(films.Count() == 0)
                     {
-                        command.Parameters.AddWithValue("@SearchQuery", $"%{searchQuery.Trim()}%");
-
-                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
-                        {
-                            DataTable resultsTable = new DataTable();
-                            adapter.Fill(resultsTable);
-
-                            // Проверка наличия результатов
-                            if (resultsTable.Rows.Count == 0)
-                            {
-                                MessageBox.Show("Фильмы не найдены", "Результаты поиска", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                return;
-                            }
-
-                            // Настройка DataGridView
-                            dataGridViewResults.DataSource = resultsTable;
-                            dataGridViewResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-                            // Обработчик двойного клика
-                            dataGridViewResults.CellDoubleClick += (s, ev) =>
-                            {
-                                if (ev.RowIndex >= 0)
-                                {
-                                    int movieId = Convert.ToInt32(resultsTable.Rows[ev.RowIndex]["movie_id"]);
-                                    MovieDetailsForm detailsForm = new MovieDetailsForm(movieId);
-                                    detailsForm.ShowDialog();
-                                }
-                            };
-                        }
+                        MessageBox.Show("Фильмы не найдены", "Результаты поиска", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
                     }
+                    dataGridViewResults.DataSource = films;
+                    dataGridViewResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                    /*
+                    // Обработчик двойного клика
+                    dataGridViewResults.CellDoubleClick += (s, ev) =>
+                    {
+                        if (ev.RowIndex >= 0)
+                        {
+                            int movieId = Convert.ToInt32(films[ev.RowIndex].movie_id);
+                            MovieDetailsForm detailsForm = new MovieDetailsForm(movieId);
+                            detailsForm.ShowDialog();
+                        }
+                    };
+                    */
+
                 }
             }
             catch (Exception ex)
@@ -417,6 +400,12 @@ namespace Kursovaya
             {
                 MessageBox.Show($"Ошибка при сохранении жанров: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void dataGridViewResults_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            MessageBox.Show(e.Exception.Message, "Ошибка",MessageBoxButtons.OK, MessageBoxIcon.Error);
+            e.ThrowException = false;
         }
     }
     

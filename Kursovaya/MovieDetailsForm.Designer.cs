@@ -44,59 +44,64 @@
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
-            this.lblTitle.Location = new System.Drawing.Point(402, 13);
+            this.lblTitle.Location = new System.Drawing.Point(357, 10);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(83, 20);
+            this.lblTitle.Size = new System.Drawing.Size(73, 16);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Название";
             // 
             // txtDescription
             // 
-            this.txtDescription.Location = new System.Drawing.Point(406, 53);
+            this.txtDescription.Enabled = false;
+            this.txtDescription.Location = new System.Drawing.Point(361, 42);
+            this.txtDescription.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
-            this.txtDescription.Size = new System.Drawing.Size(392, 26);
+            this.txtDescription.Size = new System.Drawing.Size(349, 75);
             this.txtDescription.TabIndex = 1;
             // 
             // lblYear
             // 
             this.lblYear.AutoSize = true;
-            this.lblYear.Location = new System.Drawing.Point(402, 197);
+            this.lblYear.Location = new System.Drawing.Point(357, 158);
             this.lblYear.Name = "lblYear";
-            this.lblYear.Size = new System.Drawing.Size(103, 20);
+            this.lblYear.Size = new System.Drawing.Size(88, 16);
             this.lblYear.TabIndex = 2;
             this.lblYear.Text = "Год выпуска";
             // 
             // lblDuration
             // 
             this.lblDuration.AutoSize = true;
-            this.lblDuration.Location = new System.Drawing.Point(402, 244);
+            this.lblDuration.Location = new System.Drawing.Point(357, 195);
             this.lblDuration.Name = "lblDuration";
-            this.lblDuration.Size = new System.Drawing.Size(121, 20);
+            this.lblDuration.Size = new System.Drawing.Size(99, 16);
             this.lblDuration.TabIndex = 3;
             this.lblDuration.Text = "Длительность";
             // 
             // lblRating
             // 
             this.lblRating.AutoSize = true;
-            this.lblRating.Location = new System.Drawing.Point(402, 288);
+            this.lblRating.Location = new System.Drawing.Point(357, 230);
             this.lblRating.Name = "lblRating";
-            this.lblRating.Size = new System.Drawing.Size(71, 20);
+            this.lblRating.Size = new System.Drawing.Size(61, 16);
             this.lblRating.TabIndex = 4;
             this.lblRating.Text = "Рейтинг";
             // 
             // ptrboxPoster
             // 
-            this.ptrboxPoster.Location = new System.Drawing.Point(103, 13);
+            this.ptrboxPoster.Location = new System.Drawing.Point(92, 10);
+            this.ptrboxPoster.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ptrboxPoster.Name = "ptrboxPoster";
-            this.ptrboxPoster.Size = new System.Drawing.Size(270, 360);
+            this.ptrboxPoster.Size = new System.Drawing.Size(240, 288);
             this.ptrboxPoster.TabIndex = 5;
             this.ptrboxPoster.TabStop = false;
             // 
             // btnShowPrevFilm
             // 
-            this.btnShowPrevFilm.Location = new System.Drawing.Point(57, 412);
+            this.btnShowPrevFilm.Location = new System.Drawing.Point(51, 330);
+            this.btnShowPrevFilm.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnShowPrevFilm.Name = "btnShowPrevFilm";
-            this.btnShowPrevFilm.Size = new System.Drawing.Size(316, 67);
+            this.btnShowPrevFilm.Size = new System.Drawing.Size(281, 54);
             this.btnShowPrevFilm.TabIndex = 6;
             this.btnShowPrevFilm.Text = "Предыдущий фильм";
             this.btnShowPrevFilm.UseVisualStyleBackColor = true;
@@ -104,9 +109,10 @@
             // 
             // btnShowNextFilm
             // 
-            this.btnShowNextFilm.Location = new System.Drawing.Point(476, 412);
+            this.btnShowNextFilm.Location = new System.Drawing.Point(423, 330);
+            this.btnShowNextFilm.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnShowNextFilm.Name = "btnShowNextFilm";
-            this.btnShowNextFilm.Size = new System.Drawing.Size(322, 67);
+            this.btnShowNextFilm.Size = new System.Drawing.Size(286, 54);
             this.btnShowNextFilm.TabIndex = 7;
             this.btnShowNextFilm.Text = "Следующий фильм";
             this.btnShowNextFilm.UseVisualStyleBackColor = true;
@@ -115,26 +121,26 @@
             // lblMovieId
             // 
             this.lblMovieId.AutoSize = true;
-            this.lblMovieId.Location = new System.Drawing.Point(13, 13);
+            this.lblMovieId.Location = new System.Drawing.Point(12, 10);
             this.lblMovieId.Name = "lblMovieId";
-            this.lblMovieId.Size = new System.Drawing.Size(56, 20);
+            this.lblMovieId.Size = new System.Drawing.Size(48, 16);
             this.lblMovieId.TabIndex = 8;
             this.lblMovieId.Text = "номер";
             // 
             // lblGenres
             // 
             this.lblGenres.AutoSize = true;
-            this.lblGenres.Location = new System.Drawing.Point(406, 149);
+            this.lblGenres.Location = new System.Drawing.Point(361, 119);
             this.lblGenres.Name = "lblGenres";
-            this.lblGenres.Size = new System.Drawing.Size(49, 20);
+            this.lblGenres.Size = new System.Drawing.Size(44, 16);
             this.lblGenres.TabIndex = 9;
             this.lblGenres.Text = "Жанр";
             // 
             // MovieDetailsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(831, 492);
+            this.ClientSize = new System.Drawing.Size(739, 394);
             this.Controls.Add(this.lblGenres);
             this.Controls.Add(this.lblMovieId);
             this.Controls.Add(this.btnShowNextFilm);
@@ -145,6 +151,7 @@
             this.Controls.Add(this.lblYear);
             this.Controls.Add(this.txtDescription);
             this.Controls.Add(this.lblTitle);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "MovieDetailsForm";
             this.Text = "информация";
             ((System.ComponentModel.ISupportInitialize)(this.ptrboxPoster)).EndInit();

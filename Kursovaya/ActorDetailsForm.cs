@@ -22,9 +22,8 @@ namespace Kursovaya
         }
 
         private void LoadActorData()
-        {
-           
-                string connectionString = "Data Source=LAPTOP-9NU3LM22\\SQLEXPRESS;Initial Catalog=movie_agregator;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+        {           
+                string connectionString = "data source=laptop\\sqlexpress;initial catalog=Delivery;integrated security=True;encrypt=False;trustservercertificate=True;MultipleActiveResultSets=True;";
                 // Загрузка основной информации об актере
                 string actorQuery = @"
                     SELECT full_name, birth_date, country, height, photo_url, imdb_link 
@@ -48,8 +47,6 @@ namespace Kursovaya
                                     lblCountry.Text = reader["country"].ToString();
                                     lblHeight.Text = reader["height"].ToString() + " см";
 
-
-
                                     // Загрузка фото, если есть
                                     if (reader["photo_url"] != DBNull.Value)
                                     {
@@ -71,7 +68,7 @@ namespace Kursovaya
 
         private void btnFilmography_Click(object sender, EventArgs e)
         {
-            string connectionString = "Data Source=LAPTOP-9NU3LM22\\SQLEXPRESS;Initial Catalog=movie_agregator;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+            string connectionString = "data source=laptop\\\\sqlexpress;initial catalog=Delivery;integrated security=True;encrypt=False;trustservercertificate=True;MultipleActiveResultSets=True;\"";
             string filmographyQuery = @"
                 SELECT f.title, f.release_year, fp.character_name, 
                        CASE WHEN fp.is_lead_role = 1 THEN 'Главная' ELSE 'Второстепенная' END AS role_type
@@ -138,7 +135,7 @@ namespace Kursovaya
                 return;
             }
 
-            string connectionString = "Data Source=LAPTOP-9NU3LM22\\SQLEXPRESS;Initial Catalog=movie_agregator;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+            string connectionString = "data source=laptop\\sqlexpress;initial catalog=Delivery;integrated security=True;encrypt=False;trustservercertificate=True;MultipleActiveResultSets=True;";
             string awardsQuery = @"
         SELECT 
             ISNULL(n.name, 'Нет данных') AS name,
