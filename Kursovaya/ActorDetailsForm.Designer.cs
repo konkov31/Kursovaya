@@ -33,7 +33,7 @@
             this.lblBirthDate = new System.Windows.Forms.Label();
             this.lblCountry = new System.Windows.Forms.Label();
             this.lblHeight = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnFilmography = new System.Windows.Forms.Button();
             this.btnShowNextActor = new System.Windows.Forms.Button();
             this.btnShowPrevActor = new System.Windows.Forms.Button();
             this.btnAwards = new System.Windows.Forms.Button();
@@ -84,14 +84,15 @@
             this.lblHeight.TabIndex = 4;
             this.lblHeight.Text = "Рост";
             // 
-            // button1
+            // btnFilmography
             // 
-            this.button1.Location = new System.Drawing.Point(362, 291);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(248, 68);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Фильмография";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnFilmography.Location = new System.Drawing.Point(362, 291);
+            this.btnFilmography.Name = "btnFilmography";
+            this.btnFilmography.Size = new System.Drawing.Size(248, 68);
+            this.btnFilmography.TabIndex = 6;
+            this.btnFilmography.Text = "Фильмография";
+            this.btnFilmography.UseVisualStyleBackColor = true;
+            this.btnFilmography.Click += new System.EventHandler(this.btnFilmography_Click);
             // 
             // btnShowNextActor
             // 
@@ -131,14 +132,14 @@
             this.Controls.Add(this.btnAwards);
             this.Controls.Add(this.btnShowPrevActor);
             this.Controls.Add(this.btnShowNextActor);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnFilmography);
             this.Controls.Add(this.lblHeight);
             this.Controls.Add(this.lblCountry);
             this.Controls.Add(this.lblBirthDate);
             this.Controls.Add(this.lblFullName);
             this.Controls.Add(this.pictureBoxActor);
             this.Name = "ActorDetailsForm";
-            this.Text = "ActorDetailsForm";
+            this.Text = "Информация об актерах";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxActor)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -152,7 +153,7 @@
         private System.Windows.Forms.Label lblBirthDate;
         private System.Windows.Forms.Label lblCountry;
         private System.Windows.Forms.Label lblHeight;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnFilmography;
         private System.Windows.Forms.Button btnShowNextActor;
         private System.Windows.Forms.Button btnShowPrevActor;
         private System.Windows.Forms.Button btnAwards;

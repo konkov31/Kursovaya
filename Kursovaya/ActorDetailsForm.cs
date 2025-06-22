@@ -67,57 +67,6 @@ namespace Kursovaya
             }
         }
 
-        
-
-        private void btnFilmography_Click(object sender, EventArgs e)
-        {
-            string connectionString = "Data Source=LAPTOP-9NU3LM22\\SQLEXPRESS;Initial Catalog=movie_agregator;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
-            string filmographyQuery = @"
-                SELECT f.title, f.release_year, fp.character_name, 
-                       CASE WHEN fp.is_lead_role = 1 THEN 'Главная' ELSE 'Второстепенная' END AS role_type
-                FROM FILM_POSITIONS fp
-                JOIN FILMS f ON fp.movie_id = f.movie_id
-                WHERE fp.person_id = @actorId AND fp.position_type = 'actor'
-                ORDER BY f.release_year DESC";
-
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                DataTable dt = new DataTable();
-                using (SqlCommand cmd = new SqlCommand(filmographyQuery, connection))
-                {
-                    cmd.Parameters.AddWithValue("@actorId", currentActorId);
-                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
-                    {
-                        da.Fill(dt);
-                    }
-                }
-
-                FilmographyForm filmographyForm = new FilmographyForm(dt);
-                filmographyForm.ShowDialog();
-            }
-        }
-
-        public class FilmographyForm : Form
-        {
-            public FilmographyForm(DataTable filmographyData)
-            {
-                this.Text = "Фильмография";
-                this.Size = new Size(600, 400);
-
-                DataGridView dgv = new DataGridView
-                {
-                    Dock = DockStyle.Fill,
-                    DataSource = filmographyData,
-                    ReadOnly = true,
-                    AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-                };
-
-                this.Controls.Add(dgv);
-            }
-        }
-
         private void btnShowPrevActor_Click(object sender, EventArgs e)
         {
             currentActorId -= 1;
@@ -199,13 +148,63 @@ namespace Kursovaya
                 };
 
                 // Format the columns for better display
-                dgv.Columns["name"].HeaderText = "Награда";
-                dgv.Columns["category"].HeaderText = "Категория";
-                dgv.Columns["description"].HeaderText = "Описание";
+                //dgv.Columns["name"].HeaderText = "Награда";
+                //dgv.Columns["category"].HeaderText = "Категория";
+                //dgv.Columns["description"].HeaderText = "Описание";
                 
 
                 this.Controls.Add(dgv);
             }
         }
+
+        private void btnFilmography_Click(object sender, EventArgs e)
+        {
+            string connectionString = "Data Source=LAPTOP-9NU3LM22\\SQLEXPRESS;Initial Catalog=movie_agregator;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+            string filmographyQuery = @"
+                SELECT f.title, f.release_year, fp.character_name, 
+                       CASE WHEN fp.is_lead_role = 1 THEN 'Главная' ELSE 'Второстепенная' END AS role_type
+                FROM FILM_POSITIONS fp
+                JOIN FILMS f ON fp.movie_id = f.movie_id
+                WHERE fp.person_id = @actorId AND fp.position_type = 'actor'
+                ORDER BY f.release_year DESC";
+
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                DataTable dt = new DataTable();
+                using (SqlCommand cmd = new SqlCommand(filmographyQuery, connection))
+                {
+                    cmd.Parameters.AddWithValue("@actorId", currentActorId);
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(dt);
+                    }
+                }
+
+                FilmographyForm filmographyForm = new FilmographyForm(dt);
+                filmographyForm.ShowDialog();
+            }
+        }
+
+            public class FilmographyForm : Form
+            {
+                public FilmographyForm(DataTable filmographyData)
+                {
+                    this.Text = "Фильмография";
+                    this.Size = new Size(600, 400);
+
+                    DataGridView dgv = new DataGridView
+                    {
+                        Dock = DockStyle.Fill,
+                        DataSource = filmographyData,
+                        ReadOnly = true,
+                        AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+                    };
+
+                    this.Controls.Add(dgv);
+                }
+            }
+        }
     }
-}
+

@@ -50,7 +50,7 @@ namespace Kursovaya
                             lblMovieId.Text = "Номер:" + _movieId.ToString();
                             lblTitle.Text = reader["Title"].ToString();
                             txtDescription.Text = reader["Description"].ToString();
-                            lblYear.Text = "Год выпуска" + reader["Release_Year"].ToString();
+                            lblYear.Text = "Год выпуска: " + reader["Release_Year"].ToString();
                             lblDuration.Text = "Длительность: " + reader["Duration"].ToString() + " мин";
                             lblRating.Text = "Рейтинг: " + reader["imdb_rating"].ToString() + "/10";
 
@@ -93,7 +93,6 @@ namespace Kursovaya
 
         private async void LoadPosterImage(string imageUrl)
         {
-           
             try
             {
                 using (HttpClient client = new HttpClient())
@@ -103,7 +102,7 @@ namespace Kursovaya
 
                     using (var response = await client.GetAsync(imageUrl))
                     {
-                        response.EnsureSuccessStatusCode(); // Вызовет исключение для неудачных статусов
+                        response.EnsureSuccessStatusCode();
 
                         using (Stream stream = await response.Content.ReadAsStreamAsync())
                         {
@@ -112,7 +111,23 @@ namespace Kursovaya
                             {
                                 await stream.CopyToAsync(ms);
                                 ms.Position = 0;
-                                ptrboxPoster.Image = Image.FromStream(ms);
+
+                                // Загружаем изображение с масштабированием
+                                using (var originalImage = Image.FromStream(ms))
+                                {
+                                    // Масштабируем изображение под размер PictureBox
+                                    var scaledImage = ScaleImageToFit(originalImage, ptrboxPoster.Width, ptrboxPoster.Height);
+
+                                    // Очищаем предыдущее изображение (если было)
+                                    if (ptrboxPoster.Image != null)
+                                    {
+                                        var oldImage = ptrboxPoster.Image;
+                                        ptrboxPoster.Image = null;
+                                        oldImage.Dispose();
+                                    }
+
+                                    ptrboxPoster.Image = scaledImage;
+                                }
                             }
                         }
                     }
@@ -122,6 +137,30 @@ namespace Kursovaya
             {
                 Console.WriteLine($"Ошибка загрузки постера: {ex.Message}");
             }
+        }
+
+        private Image ScaleImageToFit(Image image, int targetWidth, int targetHeight)
+        {
+            // Рассчитываем соотношение сторон
+            double ratioX = (double)targetWidth / image.Width;
+            double ratioY = (double)targetHeight / image.Height;
+            double ratio = Math.Min(ratioX, ratioY);
+
+            // Новые размеры с сохранением пропорций
+            int newWidth = (int)(image.Width * ratio);
+            int newHeight = (int)(image.Height * ratio);
+
+            // Создаем новое изображение
+            Bitmap newImage = new Bitmap(newWidth, newHeight);
+
+            // Используем высококачественное масштабирование
+            using (Graphics graphics = Graphics.FromImage(newImage))
+            {
+                graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+            }
+
+            return newImage;
         }
 
         private void btnShowPrevFilm_Click(object sender, EventArgs e)

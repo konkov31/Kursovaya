@@ -53,8 +53,10 @@
             // txtDescription
             // 
             this.txtDescription.Location = new System.Drawing.Point(406, 53);
+            this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
-            this.txtDescription.Size = new System.Drawing.Size(392, 26);
+            this.txtDescription.ReadOnly = true;
+            this.txtDescription.Size = new System.Drawing.Size(392, 80);
             this.txtDescription.TabIndex = 1;
             // 
             // lblYear
@@ -134,6 +136,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.ClientSize = new System.Drawing.Size(831, 492);
             this.Controls.Add(this.lblGenres);
             this.Controls.Add(this.lblMovieId);
