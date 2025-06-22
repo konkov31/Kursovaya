@@ -16,16 +16,11 @@ namespace Kursovaya
 {
     public partial class Mainform : Form
     {
-        private string connectionString = "Data Source=LAPTOP-9NU3LM22\\SQLEXPRESS;Initial Catalog=movie_agregator;Integrated Security=True";
+        private string connectionString = "Data Source=LAPTOP\\SQLEXPRESS;Initial Catalog=movie_agregator;Integrated Security=True";
         private int userId;
         private ComboBox comboBoxMovies;
 
         private int _currentUserId;
-
-       
-       
-       
-
         private int GetCurrentUserId()
         {
             return _currentUserId;
@@ -60,7 +55,6 @@ namespace Kursovaya
        
         private void btn_topfilms_Click(object sender, EventArgs e)
         {
-            string connectionString = "Data Source=LAPTOP-9NU3LM22\\SQLEXPRESS;Initial Catalog=movie_agregator;Integrated Security=True";
 
             string query = "SELECT * FROM HighRatedMovies";
 
@@ -295,31 +289,26 @@ namespace Kursovaya
                 {
                     connection.Open();
 
+                    using(var cmd = new SqlCommand("DeleteFavoriteGenres", connection))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@user_id", GetCurrentUserId());
+                        cmd.ExecuteNonQuery();
+                    }
+
                     foreach (var chk in panel.Controls.OfType<CheckBox>().Where(c => c.Checked))
                     {
-                        using (var cmd = new SqlCommand("AddFavoriteGenre", connection))
+                        using (var cmd = new SqlCommand("AddFavoriteSingleGenre", connection))
                         {
                             if (chk.Tag == null || !int.TryParse(chk.Tag.ToString(), out int genreId))
-                            {
-                                MessageBox.Show($"Ошибка: неверный genre_id для жанра '{chk.Text}'", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                continue;
-                            }
-
+                                throw new Exception("Жанр не найден");
+                                
                             cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@user_id", userId);
+                            cmd.Parameters.AddWithValue("@user_id", GetCurrentUserId());
                             cmd.Parameters.AddWithValue("@genre_id", (int)chk.Tag);
                             Console.WriteLine($"Удаляем жанры для user_id = {userId}");
                             Console.WriteLine($"Добавляем жанр: genre_id = {chk.Text}");
-
-                            try
-                            {
-                                cmd.ExecuteNonQuery();
-                            }
-                            catch (SqlException ex)
-                            {
-                                // Логируем, но не останавливаем процесс
-                                Debug.WriteLine($"Ошибка при добавлении жанра {chk.Text}: {ex.Message}");
-                            }
+                            cmd.ExecuteNonQuery();
                         }
                     }
                     MessageBox.Show("Избранные жанры обновлены!", "Успех",
@@ -327,6 +316,11 @@ namespace Kursovaya
 
                     form.Close();
                 }
+            }
+            catch (SqlException ex)
+            {
+                // Логируем, но не останавливаем процесс
+                Debug.WriteLine($"Ошибка при добавлении жанра: {ex.Message}");
             }
             catch (Exception ex)
             {
@@ -449,47 +443,37 @@ namespace Kursovaya
                 };
 
                 // 4. Настраиваем DataGridView
-                var dgv = new DataGridView
+                DataGridView dgv = new DataGridView
                 {
                     Dock = DockStyle.Fill,
                     AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                    DataSource = recommendations,
-                    ReadOnly = true,
-                    AllowUserToAddRows = false
+                    DataSource = recommendations
                 };
 
                 // Настраиваем столбцы
-                dgv.Columns["title"].HeaderText = "Название";
-                dgv.Columns["release_year"].HeaderText = "Год";
-                dgv.Columns["imdb_rating"].HeaderText = "Рейтинг IMDb";
-                dgv.Columns["duration"].HeaderText = "Длительность (мин)";
-                dgv.Columns["age_rating"].HeaderText = "Возрастной рейтинг";
-                dgv.Columns["platforms"].HeaderText = "Доступно на";
+                if (dgv.Columns.Contains("title")) dgv.Columns["title"].HeaderText = "Название";
+                if (dgv.Columns.Contains("release_year")) dgv.Columns["release_year"].HeaderText = "Год";
+                if (dgv.Columns.Contains("imdb_rating")) dgv.Columns["imdb_rating"].HeaderText = "Рейтинг IMDb";
+                if (dgv.Columns.Contains("duration")) dgv.Columns["duration"].HeaderText = "Длительность (мин)";
+                if (dgv.Columns.Contains("age_rating")) dgv.Columns["age_rating"].HeaderText = "Возрастной рейтинг";
+                if (dgv.Columns.Contains("platforms")) dgv.Columns["platforms"].HeaderText = "Доступно на";
+                if (dgv.Columns.Contains("movie_id")) dgv.Columns["movie_id"].Visible = false;
 
-                
-                dgv.Columns["movie_id"].Visible = false;
-
-              
-                var detailsColumn = new DataGridViewButtonColumn
+                dgv.CellContentClick += (s, ev) =>
                 {
-                    Text = "Подробнее",
-                    UseColumnTextForButtonValue = true,
-                    HeaderText = "Действия"
-                };
-                dgv.Columns.Add(detailsColumn);
-
-               
-                dgv.CellContentClick += (s, args) =>
-                {
-                    if (args.ColumnIndex == detailsColumn.Index && args.RowIndex >= 0)
+                    // Проверяем, что клик был по ячейке в столбце с названием фильма
+                    // Замените "НазваниеСтолбца" на фактическое название столбца с именами фильмов
+                    if (ev.ColumnIndex == dgv.Columns["title"].Index && ev.RowIndex >= 0)
                     {
-                        int movieId = Convert.ToInt32(dgv.Rows[args.RowIndex].Cells["movie_id"].Value);
+                        // Получаем ID фильма или другие данные, которые нужно передать в MovieDetailsForm
+                        // Предполагаем, что в таблице есть столбец с ID фильма
+                        int movieId = Convert.ToInt32(dgv.Rows[ev.RowIndex].Cells["movie_id"].Value);
                         ShowMovieDetails(movieId);
                     }
                 };
-              
+
                 recommendationsForm.Controls.Add(dgv);
-                recommendationsForm.ShowDialog();
+                recommendationsForm.Show();
             }
             catch (Exception ex)
             {
@@ -504,8 +488,7 @@ namespace Kursovaya
             {
                 // Создаем экземпляр вашей существующей формы
                 var detailsForm = new MovieDetailsForm(movieId); // Предполагается, что форма принимает movieId в конструкторе
-
-                detailsForm.ShowDialog();
+                detailsForm.Show();
 
             }
             catch (Exception ex)
@@ -522,7 +505,7 @@ namespace Kursovaya
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = @"
-            SELECT TOP 20 
+                SELECT TOP 20 
                 f.movie_id,
                 f.title,
                 f.release_year,

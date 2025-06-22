@@ -25,7 +25,7 @@ namespace Kursovaya
 
         private void LoadMovieDetails()
         {
-            string connectionString = "Data Source=LAPTOP-9NU3LM22\\SQLEXPRESS;Initial Catalog=movie_agregator;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+            string connectionString = "Data Source=LAPTOP\\SQLEXPRESS;Initial Catalog=movie_agregator;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
             string query = @"SELECT title, description, release_year, duration, imdb_rating, poster_url
                             FROM Films 
                             WHERE movie_id = @MovieId";
@@ -37,6 +37,7 @@ namespace Kursovaya
 
             try
             {
+                txtDescription.Enabled = false;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();

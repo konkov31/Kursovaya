@@ -8,7 +8,7 @@ namespace Kursovaya
     public partial class LoginForm : Form
     {
         // Строка подключения к базе данных
-        private string connectionString = "Data Source=LAPTOP-9NU3LM22\\SQLEXPRESS;Initial Catalog=movie_agregator;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+        private string connectionString = "Data Source=LAPTOP\\SQLEXPRESS;Initial Catalog=movie_agregator;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
 
         public LoginForm()
         {
@@ -76,7 +76,7 @@ namespace Kursovaya
                                 string dbUsername = reader.GetString(1);
                                 bool isPremium = reader.GetBoolean(2);
 
-                                this.Hide(); 
+                                this.Hide();
 
                                 Mainform mainForm = new Mainform(userId, dbUsername, isPremium);
                                 mainForm.Show();
